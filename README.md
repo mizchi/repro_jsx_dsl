@@ -2,7 +2,7 @@
 
 Minimal reproduction for MoonBit optional arguments bundle size issue in JSX-like DSL.
 
-## Reproduction / 再現手順
+## Reproduction
 
 ```bash
 git clone https://github.com/mizchi/repro_jsx_dsl.git
@@ -13,14 +13,14 @@ pnpm install
 pnpm vite build
 ```
 
-## Bundle Size Results / バンドルサイズ結果
+## Bundle Size Results
 
 | Case | MoonBit Output | Vite (minified) | gzip |
 |------|----------------|-----------------|------|
 | **Case 1**: Simple Counter (5 elements) | 31 KB | 7.77 KB | 2.73 KB |
 | **Case 2**: Complex App (50+ elements) | 86 KB | 20.29 KB | 5.64 KB |
 
-## Switch Cases / ケース切り替え
+## Switch Cases
 
 Edit `src/main.mbt`:
 
@@ -35,7 +35,7 @@ fn main {
 }
 ```
 
-## Problem / 問題
+## Problem
 
 See [case1.md](./case1.md) for detailed analysis.
 
