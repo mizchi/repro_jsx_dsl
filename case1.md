@@ -2,30 +2,22 @@
 
 ## English
 
-### Problem Summary
+I created a small repository to reproduce the issue.
 
-When using labeled optional arguments in MoonBit functions, the generated JavaScript passes **all arguments explicitly** at every call site, even when most are `undefined`.
-
-### Reproduction
-
-```moonbit
-// Function with 10 parameters (9 optional + 1 required)
-pub fn div(
-  id? : String,
-  class? : String,
-  style? : String,
-  dyn_class? : () -> String,
-  dyn_style? : () -> String,
-  on? : HandlerMap,
-  ref_? : ElementRef,
-  attrs? : Array[(String, Attr)],
-  dyn_attrs? : Array[(String, AttrValue)],
-  children : Array[DomNode],
-) -> DomNode { ... }
-
-// Simple usage - only 2 arguments used
-div(class="container", [text("Hello")])
+```bash
+git clone https://github.com/mizchi/repro_jsx_dsl.git
+cd repro_jsx_dsl
+moon update && moon install
+moon build --target js
+npm install
+npx vite build
 ```
+
+I've committed two minified JS files so you can see the results directly:
+
+[Simple case](https://github.com/mizchi/repro_jsx_dsl/blob/main/memo/index-case1.js)
+
+[Complex case](https://github.com/mizchi/repro_jsx_dsl/blob/main/memo/index-case2.js)
 
 ### Generated JavaScript
 
@@ -55,32 +47,24 @@ This suggests significant per-element overhead from optional argument expansion.
 
 ## 日本語
 
-### 問題の概要
+問題を再現するための小さなリポジトリを作成しました。
 
-MoonBit でラベル付きオプショナル引数を使用した関数を呼び出すと、生成される JavaScript では**すべての引数が明示的に渡される**。使用していない引数も `undefined` として渡される。
-
-### 再現コード
-
-```moonbit
-// 10個のパラメータを持つ関数（9個がオプショナル + 1個が必須）
-pub fn div(
-  id? : String,
-  class? : String,
-  style? : String,
-  dyn_class? : () -> String,
-  dyn_style? : () -> String,
-  on? : HandlerMap,
-  ref_? : ElementRef,
-  attrs? : Array[(String, Attr)],
-  dyn_attrs? : Array[(String, AttrValue)],
-  children : Array[DomNode],
-) -> DomNode { ... }
-
-// シンプルな使用例 - 実際に使うのは2引数だけ
-div(class="container", [text("Hello")])
+```bash
+git clone https://github.com/mizchi/repro_jsx_dsl.git
+cd repro_jsx_dsl
+moon update && moon install
+moon build --target js
+npm install
+npx vite build
 ```
 
-### 生成される JavaScript
+とりあえず結果だけ見るために、minify済みの2種のjsをコミットしてあります。
+
+[シンプルなケース](https://github.com/mizchi/repro_jsx_dsl/blob/main/memo/index-case1.js)
+
+[複雑なケース](https://github.com/mizchi/repro_jsx_dsl/blob/main/memo/index-case2.js)
+
+### 生成される JavaScript の一部
 
 ```javascript
 // 10個すべての引数が渡される。未使用のものは undefined/Option$None$X$ になる
@@ -103,21 +87,3 @@ div(undefined, "container", undefined, undefined, undefined,
 1. **呼び出しごとのオーバーヘッド**: 2引数で済むところを10+引数渡す
 2. **型パラメータごとのシングルトン**: `Option$None$2$`, `Option$None$3$` など、型ごとに別オブジェクトが生成される
 3. **UI コードでの蓄積**: 一般的な UI は100+要素あるため、このオーバーヘッドが累積する
-
----
-
-## How to Reproduce / 再現方法
-
-```bash
-cd ~/sandbox/repro_jsx_like
-pnpm install
-pnpm build    # moon build + vite build
-
-# Switch cases in src/main.mbt:
-# - case1(): Simple counter
-# - case2(): Complex app
-```
-
-## Related
-
-- https://github.com/moonbitlang/moonbit-evolution/issues/19
