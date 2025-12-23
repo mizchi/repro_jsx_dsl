@@ -120,4 +120,4 @@ pnpm build    # moon build + vite build
 
 ## Related
 
-- GitHub Issue: https://github.com/moonbitlang/moonbit-evolution/issues/19
+- https://github.com/moonbitlang/moonbit-evolution/issues/19
