@@ -51,12 +51,6 @@ This suggests significant per-element overhead from optional argument expansion.
 2. **Type-specific singletons**: `Option$None$2$`, `Option$None$3$`, etc. are generated for each type parameter
 3. **UI code multiplication**: Typical UI has 100+ elements, amplifying this overhead
 
-### Suggested Optimizations
-
-1. Truncate trailing `undefined` arguments at call sites
-2. Use JS default parameters in generated function definitions
-3. Inline small DSL functions to eliminate call overhead
-
 ---
 
 ## 日本語
@@ -109,12 +103,6 @@ div(undefined, "container", undefined, undefined, undefined,
 1. **呼び出しごとのオーバーヘッド**: 2引数で済むところを10+引数渡す
 2. **型パラメータごとのシングルトン**: `Option$None$2$`, `Option$None$3$` など、型ごとに別オブジェクトが生成される
 3. **UI コードでの蓄積**: 一般的な UI は100+要素あるため、このオーバーヘッドが累積する
-
-### 提案する最適化
-
-1. 呼び出し側で末尾の `undefined` 引数を省略する
-2. 生成される JS 関数定義でデフォルト引数を使用する
-3. 小さな DSL 関数をインライン化して呼び出しオーバーヘッドを排除する
 
 ---
 

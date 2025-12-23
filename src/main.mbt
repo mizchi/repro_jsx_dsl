@@ -8,21 +8,18 @@
 // Case 1: Simple Counter (Minimal)
 // =============================================================================
 
+///|
 fn case1() -> @dom.DomNode {
   let count = @signal.Signal::new(0)
   @dom.div(class="container", [
-    @dom.h1([
-      @dom.text("Counter")
-    ]),
-    @dom.div(class="count", [
-      @dom.text_sig(count)
-    ]),
+    @dom.h1([@dom.text("Counter")]),
+    @dom.div(class="count", [@dom.text_sig(count)]),
     @dom.button(on=@dom.events().click(fn(_) { count.set(count.get() + 1) }), [
-      @dom.text("+")
+      @dom.text("+"),
     ]),
     @dom.button(on=@dom.events().click(fn(_) { count.set(count.get() - 1) }), [
-      @dom.text("-")
-    ])
+      @dom.text("-"),
+    ]),
   ])
 }
 
@@ -31,6 +28,8 @@ fn case1() -> @dom.DomNode {
 // =============================================================================
 
 // Counter with computed values
+
+///|
 fn counter_section() -> @dom.DomNode {
   let count = @signal.Signal::new(0)
   let doubled = @signal.memo(fn() { count.get() * 2 })
@@ -41,20 +40,24 @@ fn counter_section() -> @dom.DomNode {
     @dom.p([@dom.text_dyn(fn() { "Doubled: \{doubled()}" })]),
     @dom.p([@dom.text_dyn(fn() { if is_even() { "Even" } else { "Odd" } })]),
     @dom.div(class="buttons", [
-      @dom.button(on=@dom.events().click(fn(_) { count.update(fn(n) { n - 1 }) }), [
-        @dom.text("-")
-      ]),
-      @dom.button(on=@dom.events().click(fn(_) { count.update(fn(n) { n + 1 }) }), [
-        @dom.text("+")
-      ]),
+      @dom.button(
+        on=@dom.events().click(fn(_) { count.update(fn(n) { n - 1 }) }),
+        [@dom.text("-")],
+      ),
+      @dom.button(
+        on=@dom.events().click(fn(_) { count.update(fn(n) { n + 1 }) }),
+        [@dom.text("+")],
+      ),
       @dom.button(on=@dom.events().click(fn(_) { count.set(0) }), [
-        @dom.text("Reset")
+        @dom.text("Reset"),
       ]),
     ]),
   ])
 }
 
 // Input with character count
+
+///|
 fn input_section() -> @dom.DomNode {
   let text = @signal.Signal::new("")
   let char_count = @signal.memo(fn() { text.get().length() })
@@ -75,13 +78,16 @@ fn input_section() -> @dom.DomNode {
 }
 
 // Conditional rendering
+
+///|
 fn conditional_section() -> @dom.DomNode {
   let show_message = @signal.Signal::new(true)
   @dom.div(class="section conditional-section", [
     @dom.h2([@dom.text("Conditional")]),
-    @dom.button(on=@dom.events().click(fn(_) { show_message.update(fn(b) { not(b) }) }), [
-      @dom.text_dyn(fn() { if show_message.get() { "Hide" } else { "Show" } }),
-    ]),
+    @dom.button(
+      on=@dom.events().click(fn(_) { show_message.update(fn(b) { not(b) }) }),
+      [@dom.text_dyn(fn() { if show_message.get() { "Hide" } else { "Show" } })],
+    ),
     @dom.show(fn() { show_message.get() }, fn() {
       @dom.div(
         class="message",
@@ -93,6 +99,8 @@ fn conditional_section() -> @dom.DomNode {
 }
 
 // Todo item structure
+
+///|
 priv struct TodoItem {
   id : Int
   text : String
@@ -100,6 +108,8 @@ priv struct TodoItem {
 }
 
 // Todo list with for_each
+
+///|
 fn todo_section() -> @dom.DomNode {
   let todos : @signal.Signal[Array[TodoItem]] = @signal.Signal::new([])
   let input_text = @signal.Signal::new("")
@@ -108,7 +118,6 @@ fn todo_section() -> @dom.DomNode {
   let completed_count = @signal.memo(fn() {
     todos.get().filter(fn(item) { item.completed }).length()
   })
-
   fn add_todo() {
     let text = input_text.get()
     if text != "" {
@@ -160,9 +169,7 @@ fn todo_section() -> @dom.DomNode {
         ]),
       ],
     ),
-    @dom.p([
-      @dom.text_dyn(fn() { "\{completed_count()}/\{total()} completed" }),
-    ]),
+    @dom.p([@dom.text_dyn(fn() { "\{completed_count()}/\{total()} completed" })]),
     @dom.ul([
       @dom.for_each(fn() { todos.get() }, fn(todo, _index) {
         let todo_id = todo.id
@@ -203,10 +210,14 @@ fn todo_section() -> @dom.DomNode {
 }
 
 // Parse int helper using JS parseInt
+
+///|
 extern "js" fn parse_int(s : String) -> Int? =
   #|(s) => { const n = parseInt(s, 10); return isNaN(n) ? undefined : n; }
 
 // Style example with dynamic styles
+
+///|
 fn style_section() -> @dom.DomNode {
   let hue = @signal.Signal::new(180)
   let size = @signal.Signal::new(100)
@@ -245,7 +256,10 @@ fn style_section() -> @dom.DomNode {
       @dom.input(
         type_="range",
         value="100",
-        attrs=[("min", @dom.Attr::AttrInt(50)), ("max", @dom.Attr::AttrInt(200))],
+        attrs=[
+          ("min", @dom.Attr::AttrInt(50)),
+          ("max", @dom.Attr::AttrInt(200)),
+        ],
         on=@dom.events().input(fn(e) {
           let target : @js.Any = e.target() |> @js.identity
           let value : String = target._get("value").cast()
@@ -259,34 +273,41 @@ fn style_section() -> @dom.DomNode {
   ])
 }
 
+///|
 fn case2() -> @dom.DomNode {
-  @dom.div(class="app", style="padding: 20px; max-width: 800px; margin: 0 auto;", [
-    @dom.h1([@dom.text("Luna Examples - Complex App")]),
-    @dom.p([@dom.text("Multiple components demonstrating bundle size impact.")]),
-    @dom.hr(),
-    counter_section(),
-    @dom.hr(),
-    input_section(),
-    @dom.hr(),
-    conditional_section(),
-    @dom.hr(),
-    todo_section(),
-    @dom.hr(),
-    style_section(),
-  ])
+  @dom.div(
+    class="app",
+    style="padding: 20px; max-width: 800px; margin: 0 auto;",
+    [
+      @dom.h1([@dom.text("Luna Examples - Complex App")]),
+      @dom.p([
+        @dom.text("Multiple components demonstrating bundle size impact."),
+      ]),
+      @dom.hr(),
+      counter_section(),
+      @dom.hr(),
+      input_section(),
+      @dom.hr(),
+      conditional_section(),
+      @dom.hr(),
+      todo_section(),
+      @dom.hr(),
+      style_section(),
+    ],
+  )
 }
 
 // =============================================================================
 // Main - Switch between cases here
 // =============================================================================
 
+///|
 fn main {
   // ===== CASE 1: Simple Counter =====
-  let view = case1()
+  // let view = case1()
 
   // ===== CASE 2: Complex App =====
-  // let view = case2()
-
+  let view = case2()
   match @js_dom.document().getElementById("app") {
     Some(app) => @dom.mount_to(app, view)
     None => println("Error: #app not found")
