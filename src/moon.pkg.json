@@ -1,0 +1,9 @@
+{
+  "is-main": true,
+  "import": [
+    { "path": "mizchi/luna/luna/signal", "alias": "signal" },
+    { "path": "mizchi/luna/platform/dom/element", "alias": "dom" },
+    { "path": "mizchi/js/browser/dom", "alias": "js_dom" },
+    { "path": "mizchi/js/core", "alias": "js" }
+  ]
+}
